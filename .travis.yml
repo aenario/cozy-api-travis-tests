@@ -3,6 +3,15 @@ language: go
 go:
   - 1.7
 
+before_install:
+  - go get -u github.com/cozy/cozy-stack
+
+# this is not a go repo, dont install nothing
+install: true
+
+before_script:
+  - nohup $GOPATH/src/github.com/cozy/cozy-stack/main.go
+
 script:
   - npm --version
   - node --version
