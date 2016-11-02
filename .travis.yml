@@ -4,8 +4,11 @@ go:
   - 1.7
 node_js:
   - 6
+env:
+  GOPATH: ${TRAVIS_BUILD_DIR}/_workspace
 
 before_install:
+  - mkdir $GOPATH
   - go get -u github.com/cozy/cozy-stack
 
 # this is not a go repo, dont install nothing
