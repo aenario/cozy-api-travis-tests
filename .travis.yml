@@ -19,10 +19,13 @@ install: true
 
 before_script:
   - go version
-  - nohup go run $GOPATH/src/github.com/cozy/cozy-stack/main.go
+  - nohup go run $GOPATH/src/github.com/cozy/cozy-stack/main.go serve
 
 script:
   - npm --version
   - node --version
   - go version
   - curl http://localhost:8080/data/foo/bar
+
+after_script:
+  - cat nohup.out
