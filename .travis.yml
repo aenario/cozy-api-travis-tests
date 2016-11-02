@@ -9,7 +9,7 @@ env:
 
 before_install:
   - go version
-  - gimme 1.7
+  - eval "$(gimme 1.7)"
   - go version
   - mkdir $GOPATH
   - go get -u github.com/cozy/cozy-stack
@@ -25,3 +25,4 @@ script:
   - npm --version
   - node --version
   - go version
+  - curl http://localhost:8080/data/foo/bar
