@@ -19,7 +19,7 @@ install: true
 
 before_script:
   - go version
-  - nohup go run $GOPATH/src/github.com/cozy/cozy-stack/main.go serve &
+  - go run $GOPATH/src/github.com/cozy/cozy-stack/main.go serve &
 
 script:
   - npm --version
