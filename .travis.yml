@@ -1,7 +1,9 @@
-language: go
+language: node_js
 
 go:
   - 1.7
+node_js:
+  - 6
 
 before_install:
   - go get -u github.com/cozy/cozy-stack
@@ -10,7 +12,8 @@ before_install:
 install: true
 
 before_script:
-  - nohup $GOPATH/src/github.com/cozy/cozy-stack/main.go
+  - go version
+  - nohup go run $GOPATH/src/github.com/cozy/cozy-stack/main.go
 
 script:
   - npm --version
