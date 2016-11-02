@@ -8,6 +8,9 @@ env:
   GOPATH: ${TRAVIS_BUILD_DIR}/_workspace
 
 before_install:
+  - go version
+  - gimme 1.7
+  - go version
   - mkdir $GOPATH
   - go get -u github.com/cozy/cozy-stack
 
