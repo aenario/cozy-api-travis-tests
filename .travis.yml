@@ -34,7 +34,7 @@ before_script:
   - sleep 3
   - NODE_ENV=test NAME=proxy TOKEN=token npm explore cozy-proxy npm run start &
   - sleep 3
-  - npm expore cozy-data-system coffee commands.coffee test-install api ../../test/package.json
+  - npm explore cozy-data-system coffee commands.coffee test-install api ../../test/package.json
   - export NAME=api
   - export TOKEN=apptoken
 
