@@ -1,32 +1,44 @@
 language: node_js
 
-go:
-  - 1.7
 node_js:
-  - 6
+  - "6"
+
+services:
+  - couchdb
+  - docker
+
 env:
-  GOPATH: ${TRAVIS_BUILD_DIR}/_workspace
+  - GOPATH=${TRAVIS_BUILD_DIR}/_workspace
 
-before_install:
-  - go version
-  - eval "$(gimme 1.7)"
-  - go version
-  - mkdir $GOPATH
-  - go get -u github.com/cozy/cozy-stack
-
-# this is not a go repo, dont install nothing
-install: true
+hosts:
+    - alice.cozy.local
+    - bob.cozy.local
+    - charlie.cozy.local
 
 before_script:
-  - go version
-  - go run $GOPATH/src/github.com/cozy/cozy-stack/main.go serve &
+  # setup couchdb 2 (docker)
+  - docker run -d -p 5984:5984 --name couch klaemo/couchdb:2.0.0
+  - sleep 10
+  - curl -X PUT http://127.0.0.1:5984/{_users,_replicator,_global_changes}
+  # go 1.7
+  - eval "$(gimme 1.7)"
+  # start a stack v2 instance from master (listening on 8080)
+  - mkdir $GOPATH
+  - go get -u github.com/cozy/cozy-stack
+  - $GOPATH/bin/cozy-stack instances add dev
+  - $GOPATH/bin/cozy-stack serve &
+  # start a stack v1 from NPM (listening on 9104 & 9101)
+  - npm install -g coffee-script
+  - npm install cozy-data-system cozy-proxy
+  - NODE_ENV=test NAME=datasystem TOKEN=token npm explore cozy-data-system npm run start &
   - sleep 3
+  - NODE_ENV=test NAME=proxy TOKEN=token npm explore cozy-proxy npm run start &
+  - sleep 3
+  - npm expore cozy-data-system coffee commands.coffee test-install api ../../test/package.json
+  - export NAME=api
+  - export TOKEN=apptoken
 
 script:
-  - npm --version
-  - node --version
-  - go version
-  - curl http://localhost:8080/data/foo/bar
-
-after_script:
-  - cat nohup.out
+  - curl http://localhost:8080/data/42
+  - curl http://localhost:9104/ds-api/data/42
+  - curl --user api:apptoken http://localhost:9104/ds-api/data/42
